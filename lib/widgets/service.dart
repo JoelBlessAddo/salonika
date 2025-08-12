@@ -45,12 +45,18 @@ class _ServiceRequestPageState extends State<ServiceRequestPage> {
   void submitRequest() {
     if (_formKey.currentState!.validate() && selectedService != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Service request submitted!')),
+        const SnackBar(
+          backgroundColor: Colors.green,
+          content: Center(child: Text('Service request submitted!')),
+        ),
       );
     } else if (selectedService == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please select a service')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          content: Center(child: Text('Please select a service')),
+        ),
+      );
     }
   }
 

@@ -257,7 +257,7 @@ class _CheckoutState extends State<Checkout> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       backgroundColor: Colors.green,
-                      content: Text("Order Confirmed!"),
+                      content: Center(child: Text("Order Confirmed!")),
                     ),
                   );
                 },
