@@ -11,7 +11,8 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final List<Map<String, dynamic>> menuItems = [
     {"icon": IconlyBroken.heart, "title": "Favorites", "onTap": () {}},
-    {"icon": IconlyBroken.setting, "title": "Payments", "onTap": () {}},
+    {"icon": IconlyBroken.wallet, "title": "Payments", "onTap": () {}},
+    {"icon": IconlyBroken.setting, "title": "Settings", "onTap": () {}},
     {"icon": Icons.local_offer_outlined, "title": "Promotions", "onTap": () {}},
     {"icon": IconlyBroken.info_circle, "title": "About", "onTap": () {}},
     {"icon": IconlyBroken.logout, "title": "Logout", "onTap": () {}},

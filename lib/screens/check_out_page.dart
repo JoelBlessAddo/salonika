@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
+import 'package:salonika/screens/thank_you_page.dart';
 import 'package:salonika/utils/payment_method_selector.dart';
 import 'package:salonika/widgets/edit_address_bottomsheet.dart';
 
@@ -249,6 +250,10 @@ class _CheckoutState extends State<Checkout> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ThankYou()),
+                  );
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       backgroundColor: Colors.green,
