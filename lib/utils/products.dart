@@ -1,4 +1,4 @@
-import 'package:salonika/models/product.dart';
+import 'package:salonika/features/home/model/product.dart';
 
 List<Product> products = [
   Product(

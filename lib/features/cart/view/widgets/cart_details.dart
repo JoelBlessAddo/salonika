@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
-import 'package:salonika/screens/check_out_page.dart';
+import 'package:salonika/features/cart/view/widgets/check_out_page.dart';
 
 class CartDetails extends StatefulWidget {
   const CartDetails({super.key});

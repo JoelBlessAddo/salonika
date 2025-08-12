@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:salonika/widgets/cart_details.dart';
+import 'package:salonika/features/cart/view/widgets/cart_details.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});

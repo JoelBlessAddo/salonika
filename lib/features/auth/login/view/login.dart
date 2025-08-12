@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:salonika/screens/registration/login.dart';
+import 'package:salonika/features/home/view/home_page.dart';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+
+class Login extends StatefulWidget {
+  const Login({super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<Login> createState() => _LoginState();
 }
 
-class _RegisterState extends State<Register> {
-  bool isChecked = false;
+class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,32 +35,15 @@ class _RegisterState extends State<Register> {
             ),
             SizedBox(height: 10),
             Text(
-              "Create Account",
+              "Sign In",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
             ),
             Text(
-              "Fill your innformation below or register\nwith your socials",
+              "Hi! welcome back, you've been missed",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.w200),
             ),
-            SizedBox(height: 40),
-            Container(
-              width: 450,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  hintText: 'Full Name',
-                  prefixIcon: Icon(Icons.person_2_outlined),
-                ),
-              ),
-            ),
-            SizedBox(height: 30),
+            SizedBox(height: 80),
             Container(
               width: 450,
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -98,40 +81,29 @@ class _RegisterState extends State<Register> {
                 ),
               ),
             ),
-            SizedBox(height: 5),
+            SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.only(right: 15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Checkbox(
-                    value: isChecked,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        isChecked = value!;
-                      });
-                    },
-                    activeColor: Colors.deepPurpleAccent,
-                  ),
-                  const Text(
-                    "Agree with Terms & Condition",
+                  Text(
+                    "Forgot Password?",
                     style: TextStyle(
                       color: Colors.deepPurpleAccent,
-                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
             ),
-
-            SizedBox(height: 10),
+            SizedBox(height: 30),
             GestureDetector(
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => Login()),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
               },
               child: Container(
                 height: 50,
@@ -142,7 +114,7 @@ class _RegisterState extends State<Register> {
                 ),
                 child: Center(
                   child: Text(
-                    "Sign Up",
+                    "Login",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -161,13 +133,13 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                   const Text(
-                    'or sign up with',
+                    'or sign in with',
                     style: TextStyle(color: Colors.black),
                   ),
                   const Expanded(
                     child: Divider(
                       thickness: 1,
-                      color: Colors.grey,
+                      color: Color.fromARGB(255, 112, 112, 112),
                       indent: 10,
                     ),
                   ),
@@ -207,21 +179,21 @@ class _RegisterState extends State<Register> {
               ),
             ),
 
-            SizedBox(height: 30),
+            SizedBox(height: 40),
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Login()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => Register()),
+                // );
               },
               child: RichText(
                 text: TextSpan(
-                  text: "Already have an account? ",
+                  text: "Don't have an account? ",
                   style: TextStyle(color: Colors.black, fontSize: 15),
                   children: [
                     TextSpan(
-                      text: 'SignIn',
+                      text: 'SignUp',
                       style: TextStyle(
                         color: Colors.deepPurpleAccent,
                         fontWeight: FontWeight.bold,

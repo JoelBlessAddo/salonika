@@ -1,9 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:salonika/data/products.dart';
-import 'package:salonika/widgets/custom_appbar.dart';
-import 'package:salonika/widgets/product_card.dart';
+import 'package:salonika/utils/products.dart';
+import 'package:salonika/utils/custom_appbar.dart';
+import 'package:salonika/features/home/view/widgets/product_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

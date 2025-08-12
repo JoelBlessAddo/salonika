@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:salonika/widgets/service.dart';
+import 'package:salonika/features/services/view/widgets/service.dart';
 
 class Servicespage extends StatefulWidget {
   const Servicespage({super.key});

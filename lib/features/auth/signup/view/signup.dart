@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:salonika/screens/home_page.dart';
+import 'package:salonika/features/auth/login/view/login.dart';
 
-
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Register extends StatefulWidget {
+  const Register({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<Register> createState() => _RegisterState();
 }
 
-class _LoginState extends State<Login> {
+class _RegisterState extends State<Register> {
+  bool isChecked = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,15 +35,32 @@ class _LoginState extends State<Login> {
             ),
             SizedBox(height: 10),
             Text(
-              "Sign In",
+              "Create Account",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
             ),
             Text(
-              "Hi! welcome back, you've been missed",
+              "Fill your innformation below or register\nwith your socials",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.w200),
             ),
-            SizedBox(height: 80),
+            SizedBox(height: 40),
+            Container(
+              width: 450,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextFormField(
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  hintText: 'Full Name',
+                  prefixIcon: Icon(Icons.person_2_outlined),
+                ),
+              ),
+            ),
+            SizedBox(height: 30),
             Container(
               width: 450,
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -81,29 +98,40 @@ class _LoginState extends State<Login> {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 5),
             Padding(
               padding: const EdgeInsets.only(right: 15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    "Forgot Password?",
+                  Checkbox(
+                    value: isChecked,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isChecked = value!;
+                      });
+                    },
+                    activeColor: Colors.deepPurpleAccent,
+                  ),
+                  const Text(
+                    "Agree with Terms & Condition",
                     style: TextStyle(
                       color: Colors.deepPurpleAccent,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 30),
+
+            SizedBox(height: 10),
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => Login()),
+                // );
               },
               child: Container(
                 height: 50,
@@ -114,7 +142,7 @@ class _LoginState extends State<Login> {
                 ),
                 child: Center(
                   child: Text(
-                    "Login",
+                    "Sign Up",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -133,13 +161,13 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   const Text(
-                    'or sign in with',
+                    'or sign up with',
                     style: TextStyle(color: Colors.black),
                   ),
                   const Expanded(
                     child: Divider(
                       thickness: 1,
-                      color: Color.fromARGB(255, 112, 112, 112),
+                      color: Colors.grey,
                       indent: 10,
                     ),
                   ),
@@ -179,21 +207,21 @@ class _LoginState extends State<Login> {
               ),
             ),
 
-            SizedBox(height: 40),
+            SizedBox(height: 30),
             GestureDetector(
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => Register()),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login()),
+                );
               },
               child: RichText(
                 text: TextSpan(
-                  text: "Don't have an account? ",
+                  text: "Already have an account? ",
                   style: TextStyle(color: Colors.black, fontSize: 15),
                   children: [
                     TextSpan(
-                      text: 'SignUp',
+                      text: 'SignIn',
                       style: TextStyle(
                         color: Colors.deepPurpleAccent,
                         fontWeight: FontWeight.bold,

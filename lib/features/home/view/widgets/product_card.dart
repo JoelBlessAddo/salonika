@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:salonika/models/product.dart';
-import 'package:salonika/screens/product_details.dart';
+import 'package:salonika/features/home/model/product.dart';
+import 'package:salonika/features/home/view/widgets/product_details.dart';
 
 class ProductCard extends StatefulWidget {
   final Product product; // store product here
