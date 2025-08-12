@@ -37,7 +37,7 @@ class _CheckoutState extends State<Checkout> {
               clipBehavior: Clip.none,
               children: [
                 IconButton.filledTonal(
-                  icon: Icon(IconlyBroken.bag, size: 28),
+                  icon: const Icon(IconlyBroken.bag, size: 28),
                   onPressed: () {},
                 ),
                 Positioned(
@@ -45,7 +45,7 @@ class _CheckoutState extends State<Checkout> {
                   top: -2,
                   child: Container(
                     padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.red,
                       shape: BoxShape.circle,
                     ),
@@ -70,199 +70,206 @@ class _CheckoutState extends State<Checkout> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Shipping Address",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Shipping Address",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 4,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
               ),
-              const SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 4,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Enter Delivery Address",
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(right: 10),
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isChecked
-                                  ? Colors.green
-                                  : Colors.grey.shade400,
-                              width: 2,
-                            ),
-                          ),
-                          child: Checkbox(
-                            value: isChecked,
-                            onChanged: (value) {
-                              setState(() {
-                                isChecked = value!;
-                              });
-                            },
-                            shape: const CircleBorder(),
-                            activeColor: Colors.green,
-                            checkColor: Colors.white,
-                            side: BorderSide.none,
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Enter Delivery Address",
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(right: 10),
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isChecked
+                                ? Colors.green
+                                : Colors.grey.shade400,
+                            width: 2,
                           ),
                         ),
-                        const Text(
-                          "Home",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(Icons.edit, size: 30),
-                          onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return EditAddressBottomSheet(
-                                  nameController: nameController,
-                                  addressController: addressController,
-                                  phoneController: phoneController,
-                                  onSave: () {
-                                    setState(() {});
-                                    Navigator.pop(context);
-                                  },
-                                );
-                              },
-                            );
+                        child: Checkbox(
+                          value: isChecked,
+                          onChanged: (value) {
+                            setState(() {
+                              isChecked = value!;
+                            });
                           },
+                          shape: const CircleBorder(),
+                          activeColor: Colors.green,
+                          checkColor: Colors.white,
+                          side: BorderSide.none,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      nameController.text,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
                       ),
+                      const Text(
+                        "Home",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.edit, size: 30),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return EditAddressBottomSheet(
+                                nameController: nameController,
+                                addressController: addressController,
+                                phoneController: phoneController,
+                                onSave: () {
+                                  setState(() {});
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    nameController.text,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
-                    const SizedBox(height: 5),
-                    Text(
-                      addressController.text,
-                      style: const TextStyle(fontSize: 14, color: Colors.black),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      phoneController.text,
-                      style: TextStyle(fontSize: 14, color: Colors.black),
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    addressController.text,
+                    style: const TextStyle(fontSize: 14, color: Colors.black),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    phoneController.text,
+                    style: const TextStyle(fontSize: 14, color: Colors.black),
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              PaymentMethodSelector(
-                initialMethod: PaymentMethod.creditCard,
-                onChanged: (method) {
-                  // Save selected payment method or update state
+            ),
+            const SizedBox(height: 20),
+            PaymentMethodSelector(
+              initialMethod: PaymentMethod.creditCard,
+              onChanged: (method) {},
+            ),
+            const SizedBox(height: 80),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Order Summary",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text("1x Product Name", style: TextStyle(color: Colors.grey)),
+                Text("₵ 20.00", style: TextStyle(fontWeight: FontWeight.w600)),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  "2x Another Product",
+                  style: TextStyle(color: Colors.grey),
+                ),
+                Text("₵ 30.00", style: TextStyle(fontWeight: FontWeight.w600)),
+              ],
+            ),
+            const Divider(height: 20, thickness: 1),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  "Total",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "Ghc 50.00",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      backgroundColor: Colors.green,
+                      content: Text("Order Confirmed!"),
+                    ),
+                  );
                 },
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                "Order Summary",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 4,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Items in Cart",
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 10),
-                    // Here you would typically list the items in the cart
-                    // For demonstration, we will use a placeholder
-                    const Text(
-                      "1x Product Name - \$20.00",
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ),
-                    const SizedBox(height: 5),
-                    const Text(
-                      "2x Another Product - \$30.00",
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ),
-                    const SizedBox(height: 10),
-                    const Divider(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("Total", style: TextStyle(fontSize: 16)),
-                        const Text("\$50.00", style: TextStyle(fontSize: 16)),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Handle order confirmation
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Order Confirmed!")),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text(
-                        "Confirm Order",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ),
-                  ],
+                child: const Text(
+                  "Place Order",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

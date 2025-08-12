@@ -99,7 +99,7 @@ class _PaymentOptionTile extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 6),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.deepPurple.shade50 : Colors.white,
+          color: isSelected ? Colors.green.shade50 : Colors.white,
           border: Border.all(
             color: isSelected ? Colors.green : Colors.grey.shade300,
             width: 2,

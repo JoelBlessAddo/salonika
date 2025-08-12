@@ -56,14 +56,14 @@ class EditAddressBottomSheet extends StatelessWidget {
             ),
             keyboardType: TextInputType.phone,
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 40),
           GestureDetector(
             onTap: onSave,
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 14),
               decoration: BoxDecoration(
-                color: Colors.deepPurpleAccent,
+                color: Colors.green,
                 borderRadius: BorderRadius.circular(8),
               ),
               alignment: Alignment.center,
