@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
+import 'package:salonika/screens/check_out_page.dart';
 
 class CartDetails extends StatefulWidget {
   const CartDetails({super.key});
@@ -220,7 +221,12 @@ class _CartDetailsState extends State<CartDetails> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Checkout()),
+                    );
+                  },
                   child: const Text(
                     "Proceed to Checkout",
                     style: TextStyle(
