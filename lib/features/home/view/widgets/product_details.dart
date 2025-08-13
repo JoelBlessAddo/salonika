@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
-import 'package:salonika/models/product.dart';
-import 'package:salonika/widgets/cart_details.dart';
-import 'package:salonika/widgets/color_selector.dart';
-import 'package:salonika/widgets/specifications.dart';
+import 'package:salonika/features/home/model/product.dart';
+import 'package:salonika/features/cart/view/cart.dart';
+import 'package:salonika/features/home/view/widgets/color_selector.dart';
+import 'package:salonika/features/home/view/widgets/specifications.dart';
 
 class ProductDetails extends StatefulWidget {
   final Product product;

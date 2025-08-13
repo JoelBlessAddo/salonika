@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:salonika/screens/bottom_nav.dart';
+import 'package:salonika/utils/bottom_nav.dart';
 
 class ThankYou extends StatelessWidget {
   const ThankYou({super.key});

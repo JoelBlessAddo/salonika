@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
-import 'package:salonika/screens/check_out_page.dart';
+import 'package:salonika/features/cart/view/widgets/check_out_page.dart';
+import 'package:salonika/features/home/view/widgets/cart_widgets.dart';
+import 'package:salonika/utils/products.dart';
 
 class CartDetails extends StatefulWidget {
   const CartDetails({super.key});
@@ -65,101 +67,11 @@ class _CartDetailsState extends State<CartDetails> {
           Expanded(
             child: ListView.separated(
               padding: const EdgeInsets.all(16),
-              itemCount: 5,
+              itemCount: products.length,
               separatorBuilder: (_, __) =>
                   const Divider(thickness: 0.8, color: Colors.grey),
               itemBuilder: (context, index) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                        width: 70,
-                        height: 70,
-                        color: Colors.grey.shade300,
-                        child: const Icon(Icons.image, size: 40),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Product name",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.green,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            "Product description",
-                            style: TextStyle(color: Colors.grey, fontSize: 14),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            "Ghc 29.99",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            IconlyBroken.delete,
-                            color: Colors.red,
-                          ),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(height: 3),
-                        Container(
-                          height: 40,
-                          width: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: Colors.grey.shade300,
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              GestureDetector(
-                                onTap: () {},
-                                child: const Padding(
-                                  padding: EdgeInsets.all(4.0),
-                                  child: Icon(Icons.remove, size: 18),
-                                ),
-                              ),
-                              const Text(
-                                "1",
-                                style: TextStyle(fontWeight: FontWeight.w500),
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: const Padding(
-                                  padding: EdgeInsets.all(4.0),
-                                  child: Icon(Icons.add, size: 18),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
+                return Cart_detailsWidget(product: products[index]);
               },
             ),
           ),

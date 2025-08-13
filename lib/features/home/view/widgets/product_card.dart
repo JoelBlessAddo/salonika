@@ -1,8 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:salonika/models/product.dart';
-import 'package:salonika/screens/product_details.dart';
+import 'package:salonika/features/home/model/product.dart';
+import 'package:salonika/features/home/view/widgets/product_details.dart';
+import 'package:salonika/utils/colors.dart';
 
 class ProductCard extends StatefulWidget {
   final Product product; // store product here
@@ -29,19 +30,20 @@ class _ProductCardState extends State<ProductCard> {
           ),
         );
       },
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        elevation: 0.1,
-        shape: const RoundedRectangleBorder(
+      child: Container(
+        decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          side: BorderSide(color: Colors.grey, width: 0.2),
+          border: Border.all(
+            color: const Color.fromARGB(128, 0, 0, 0),
+            width: 0.5,
+          ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              height: 120,
-              width: double.infinity,
+              height: 100,
+              // width: double.infinity, DONT DO IT AGAIN
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(10),
@@ -75,6 +77,7 @@ class _ProductCardState extends State<ProductCard> {
                 ),
               ),
             ),
+            Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -140,6 +143,7 @@ class _ProductCardState extends State<ProductCard> {
             ),
           ],
         ),
+        
       ),
     );
   }

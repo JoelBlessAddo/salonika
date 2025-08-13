@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
-import 'package:salonika/screens/thank_you_page.dart';
+import 'package:salonika/utils/thank_you_page.dart';
 import 'package:salonika/utils/payment_method_selector.dart';
-import 'package:salonika/widgets/edit_address_bottomsheet.dart';
+import 'package:salonika/features/cart/view/widgets/edit_address_bottomsheet.dart';
 
 class Checkout extends StatefulWidget {
   const Checkout({super.key});

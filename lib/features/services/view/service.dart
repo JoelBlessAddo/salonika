@@ -88,85 +88,110 @@ class _ServiceRequestPageState extends State<ServiceRequestPage> {
           child: Column(
             children: [
               // Full Name
-              TextFormField(
-                controller: fullnameController,
-                decoration: const InputDecoration(
-                  labelText: 'Full Name',
-                  border: OutlineInputBorder(),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Enter full name' : null,
+                child: TextFormField(
+                  controller: fullnameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Full Name',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Enter full name' : null,
+                ),
               ),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: locationController,
-                decoration: const InputDecoration(
-                  labelText: 'Location',
-                  border: OutlineInputBorder(),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Enter location' : null,
+                child: TextFormField(
+                  controller: locationController,
+                  decoration: const InputDecoration(
+                    labelText: 'Location',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Enter location' : null,
+                ),
               ),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: phoneController,
-                decoration: const InputDecoration(
-                  labelText: 'Phone Number',
-                  border: OutlineInputBorder(),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                keyboardType: TextInputType.phone,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Enter phone number';
-                  }
-                  if (!RegExp(r'^\+?\d{7,15}$').hasMatch(value)) {
-                    return 'Enter valid phone number';
-                  }
-                  return null;
-                },
+                child: TextFormField(
+                  controller: phoneController,
+                  decoration: const InputDecoration(
+                    labelText: 'Phone Number',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.phone,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter phone number';
+                    }
+                    if (!RegExp(r'^\+?\d{7,15}$').hasMatch(value)) {
+                      return 'Enter valid phone number';
+                    }
+                    return null;
+                  },
+                ),
               ),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Enter email';
-                  }
-                  if (!RegExp(
-                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                  ).hasMatch(value)) {
-                    return 'Enter valid email';
-                  }
-                  return null;
-                },
+                child: TextFormField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter email';
+                    }
+                    if (!RegExp(
+                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                    ).hasMatch(value)) {
+                      return 'Enter valid email';
+                    }
+                    return null;
+                  },
+                ),
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Select Service',
-                  border: OutlineInputBorder(),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                value: selectedService,
-                items: services
-                    .map(
-                      (service) => DropdownMenuItem(
-                        value: service,
-                        child: Text(service),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedService = value;
-                  });
-                },
-                validator: (value) =>
-                    value == null ? 'Please select a service' : null,
+                child: DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                    labelText: 'Select Service',
+                    border: OutlineInputBorder(),
+                  ),
+                  value: selectedService,
+                  items: services
+                      .map(
+                        (service) => DropdownMenuItem(
+                          value: service,
+                          child: Text(service),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedService = value;
+                    });
+                  },
+                  validator: (value) =>
+                      value == null ? 'Please select a service' : null,
+                ),
               ),
               const SizedBox(height: 24),
               GestureDetector(
