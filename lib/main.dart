@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:salonika/utils/bottom_nav.dart';
 import 'package:salonika/utils/splash_screen.dart';
 
 void main() {
