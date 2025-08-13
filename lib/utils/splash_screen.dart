@@ -2,6 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:salonika/features/auth/login/view/login.dart';
+import 'package:salonika/utils/bottom_nav.dart';
+import 'package:salonika/utils/colors.dart';
+import 'package:salonika/utils/navigator.dart';
 
 class SplashScreeen extends StatefulWidget {
   const SplashScreeen({super.key});
@@ -11,17 +15,38 @@ class SplashScreeen extends StatefulWidget {
 }
 
 class _SplashScreeenState extends State<SplashScreeen> {
+  bool _navigated = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Make sure navigation happens after the first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) => _goNext());
+  }
+
+  Future<void> _goNext() async {
+    // Optional splash delay
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (!mounted || _navigated) return;
+    _navigated = true;
+
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (_) => const Login()));
+  }
+
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-      ),
-    );
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   const SystemUiOverlayStyle(
+    //     statusBarColor: Colors.transparent,
+    //     statusBarIconBrightness: Brightness.light,
+    //   ),
+    // );
 
     final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
+    // final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: Stack(
@@ -35,25 +60,13 @@ class _SplashScreeenState extends State<SplashScreeen> {
             right: 0,
             child: Center(
               child: Text(
-                "Salonika",
-                style: TextStyle(fontSize: 40, color: Colors.white),
+                textAlign: TextAlign.center,
+                "Salonika\nWhere Technology Meets the Land",
+                style: TextStyle(fontSize: 20, color: BLACK),
               ),
             ),
           ),
-          Positioned(
-            top: screenHeight * 0.83,
-            left: screenWidth * 0.1,
-            right: screenWidth * 0.1,
-            child: Text(
-              "Where Technology Meets the Land",
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
+
           Positioned(
             bottom: screenHeight * 0.05,
             left: 0,
@@ -71,7 +84,7 @@ class _SplashScreeenState extends State<SplashScreeen> {
                     horizontal: 30,
                     vertical: 15,
                   ),
-                  backgroundColor: Colors.black.withOpacity(0.6),
+                  backgroundColor: Colors.black.withOpacity(0.7),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),

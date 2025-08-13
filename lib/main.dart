@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salonika/utils/bottom_nav.dart';
+import 'package:salonika/utils/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Salonika App',
-      home: const BottomNav(),
+      home: SplashScreeen(),
     );
   }
 }

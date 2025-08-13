@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
+import 'package:salonika/features/auth/login/view/login.dart';
+import 'package:salonika/utils/navigator.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -15,7 +17,7 @@ class _ProfilePageState extends State<ProfilePage> {
     {"icon": IconlyBroken.setting, "title": "Settings", "onTap": () {}},
     {"icon": Icons.local_offer_outlined, "title": "Promotions", "onTap": () {}},
     {"icon": IconlyBroken.info_circle, "title": "About", "onTap": () {}},
-    {"icon": IconlyBroken.logout, "title": "Logout", "onTap": () {}},
+    {"icon": IconlyBroken.logout, "title": "Logout", "onTap": (context) {}},
   ];
 
   @override
@@ -121,7 +123,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       size: 16,
                       color: Colors.grey.shade500,
                     ),
-                    onTap: menuItems[index]["onTap"],
+                    onTap: () {
+                      customNavigator(context, Login());
+                    },
                   ),
                 );
               },
