@@ -3,9 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:salonika/features/auth/login/view/login.dart';
-import 'package:salonika/utils/bottom_nav.dart';
 import 'package:salonika/utils/colors.dart';
-import 'package:salonika/utils/navigator.dart';
 
 class SplashScreeen extends StatefulWidget {
   const SplashScreeen({super.key});

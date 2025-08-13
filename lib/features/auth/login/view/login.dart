@@ -160,7 +160,7 @@ class _LoginState extends State<Login> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Image.asset('assets/G.png',  scale: 4),
+                        child: Image.asset('assets/G.png', scale: 4),
                       ),
                     ),
 
@@ -172,7 +172,11 @@ class _LoginState extends State<Login> {
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.grey.shade300),
                       ),
-                      child: Image.asset('assets/apple.png', scale: 4),
+                      child: Image.asset(
+                        'assets/apple.png',
+                        width: 20,
+                        height: 20,
+                      ),
                     ),
                   ],
                 ),
