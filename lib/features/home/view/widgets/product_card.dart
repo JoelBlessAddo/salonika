@@ -1,55 +1,45 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:salonika/core/repo/cart_repo.dart';
+import 'package:salonika/core/repo/product_repo.dart';
 import 'package:salonika/features/home/model/product.dart';
 import 'package:salonika/features/home/view/widgets/product_details.dart';
 import 'package:salonika/utils/colors.dart';
 
-class ProductCard extends StatefulWidget {
-  final Product product; // store product here
-
+class ProductCard extends StatelessWidget {
+  final Product product;
   const ProductCard({super.key, required this.product});
 
   @override
-  State<ProductCard> createState() => _ProductCardState();
-}
-
-class _ProductCardState extends State<ProductCard> {
-  bool isFavorite = false;
-
-  @override
   Widget build(BuildContext context) {
-    final product = widget.product;
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final repo = ProductRepository();
 
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetails(product: product),
-          ),
-        );
-      },
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => ProductDetails(product: product)),
+      ),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
           border: Border.all(
             color: const Color.fromARGB(128, 0, 0, 0),
             width: 0.5,
           ),
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               height: 100,
-              // width: double.infinity, DONT DO IT AGAIN
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(10),
                 ),
                 image: DecorationImage(
-                  image: AssetImage(product.imageUrl),
+                  image: NetworkImage(product.imageUrl), // <-- network
                   fit: BoxFit.cover,
                 ),
               ),
@@ -60,32 +50,34 @@ class _ProductCardState extends State<ProductCard> {
                   child: CircleAvatar(
                     backgroundColor: Colors.white70,
                     radius: 16,
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        setState(() {
-                          isFavorite = !isFavorite;
-                        });
+                    child: StreamBuilder<bool>(
+                      stream: repo.favoriteStream(uid, product.id),
+                      builder: (_, s) {
+                        final fav = s.data == true;
+                        return IconButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () => repo.toggleFavorite(uid, product.id),
+                          icon: Icon(
+                            fav ? Icons.favorite : Icons.favorite_border,
+                            color: fav ? Colors.red : Colors.grey,
+                            size: 20,
+                          ),
+                        );
                       },
-                      icon: Icon(
-                        isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: isFavorite ? Colors.red : Colors.grey,
-                        size: 20,
-                      ),
                     ),
                   ),
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     product.name,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -97,7 +89,7 @@ class _ProductCardState extends State<ProductCard> {
                     children: [
                       Flexible(
                         child: Text(
-                          "Ghc${product.price}",
+                          "GHS ${product.price.toStringAsFixed(2)}",
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontSize: 14,
@@ -121,18 +113,31 @@ class _ProductCardState extends State<ProductCard> {
                             ],
                           ),
                           child: IconButton(
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Center(
-                                    child: Text('Item added to cart'),
-                                  ),
-                                  duration: Duration(seconds: 2),
-                                  backgroundColor: Colors.green,
-                                ),
+                            onPressed: () async {
+                              final uid =
+                                  FirebaseAuth.instance.currentUser!.uid;
+                              await CartRepository().add(
+                                uid,
+                                product.id,
+                                delta: 1,
                               );
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Center(
+                                      child: Text('Item added to cart'),
+                                    ),
+                                    duration: Duration(seconds: 2),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+                              }
                             },
-                            icon: const Icon(Icons.add_shopping_cart),
+
+                            icon: const Icon(
+                              Icons.add_shopping_cart,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -143,7 +148,6 @@ class _ProductCardState extends State<ProductCard> {
             ),
           ],
         ),
-        
       ),
     );
   }

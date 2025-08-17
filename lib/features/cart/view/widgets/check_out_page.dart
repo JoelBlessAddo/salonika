@@ -1,26 +1,37 @@
+// lib/features/cart/view/checkout.dart
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
-import 'package:salonika/utils/thank_you_page.dart';
+import 'package:salonika/core/repo/cart_repo.dart';
+import 'package:salonika/core/repo/order_repo.dart';
+import 'package:salonika/core/repo/product_repo.dart';
+import 'package:salonika/features/home/model/product.dart';
 import 'package:salonika/utils/payment_method_selector.dart';
 import 'package:salonika/features/cart/view/widgets/edit_address_bottomsheet.dart';
+import 'package:salonika/utils/thank_you_page.dart';
 
 class Checkout extends StatefulWidget {
   const Checkout({super.key});
-
   @override
   State<Checkout> createState() => _CheckoutState();
 }
 
 class _CheckoutState extends State<Checkout> {
-  bool isChecked = false;
-  final TextEditingController nameController = TextEditingController(text: "");
-  final TextEditingController addressController = TextEditingController(
-    text: "",
-  );
-  final TextEditingController phoneController = TextEditingController(text: "");
+  final nameController = TextEditingController();
+  final addressController = TextEditingController();
+  final phoneController = TextEditingController();
+
+  PaymentMethod _method = PaymentMethod.creditCard; // default
+  bool isChecked = true; // "Home" selected by default
+
+  final productRepo = ProductRepository();
+  final cartRepo = CartRepository();
+  final orderRepo = OrderRepository();
 
   @override
   Widget build(BuildContext context) {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -29,253 +40,259 @@ class _CheckoutState extends State<Checkout> {
           style: TextStyle(fontWeight: FontWeight.w500),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
         elevation: 1,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                IconButton.filledTonal(
-                  icon: const Icon(IconlyBroken.bag, size: 28),
-                  onPressed: () {},
-                ),
-                Positioned(
-                  right: -2,
-                  top: -2,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: 20,
-                      minHeight: 20,
-                    ),
-                    child: const Text(
-                      "3",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ],
+            child: IconButton.filledTonal(
+              icon: const Icon(IconlyBroken.bag, size: 28),
+              onPressed: () {},
             ),
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Shipping Address",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 4,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Enter Delivery Address",
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(right: 10),
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: isChecked
-                                ? Colors.green
-                                : Colors.grey.shade400,
-                            width: 2,
+      body: StreamBuilder<Map<String, Product>>(
+        stream: productRepo.watchProductMap(),
+        builder: (context, prodSnap) {
+          if (!prodSnap.hasData)
+            return const Center(child: CircularProgressIndicator());
+          final products = prodSnap.data!;
+
+          return StreamBuilder<Map<String, int>>(
+            stream: cartRepo.watchCart(uid),
+            builder: (context, cartSnap) {
+              if (!cartSnap.hasData)
+                return const Center(child: CircularProgressIndicator());
+              final cart = cartSnap.data!;
+
+              // Build summary rows
+              final rows = cart.entries
+                  .where((e) => products.containsKey(e.key))
+                  .map((e) {
+                    final p = products[e.key]!;
+                    final qty = e.value;
+                    final subtotal = p.price * qty;
+                    return _OrderRow(
+                      name: "${qty}x ${p.name}",
+                      price: subtotal,
+                    );
+                  })
+                  .toList();
+
+              final subtotal = rows.fold<double>(0, (s, r) => s + r.price);
+              const shippingFee = 0.0;
+              final total = subtotal + shippingFee;
+
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Shipping card
+                    const Text(
+                      "Shipping Address",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    _ShippingCard(
+                      isChecked: isChecked,
+                      onEdit: () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (ctx) => EditAddressBottomSheet(
+                            nameController: nameController,
+                            addressController: addressController,
+                            phoneController: phoneController,
+                            onSave: () {
+                              setState(() {});
+                              Navigator.pop(ctx);
+                            },
+                          ),
+                        );
+                      },
+                      name: nameController.text,
+                      address: addressController.text,
+                      phone: phoneController.text,
+                      onCheckChanged: (v) => setState(() => isChecked = v),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Payment method
+                    PaymentMethodSelector(
+                      initialMethod: _method,
+                      onChanged: (m) => setState(() => _method = m),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Order summary
+                    const Text(
+                      "Order Summary",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    for (final r in rows) _OrderRowWidget(r),
+                    const Divider(height: 20, thickness: 1),
+                    _OrderRowWidget(
+                      _OrderRow(name: "Subtotal", price: subtotal, bold: true),
+                    ),
+                    _OrderRowWidget(
+                      _OrderRow(name: "Shipping", price: shippingFee),
+                    ),
+                    _OrderRowWidget(
+                      _OrderRow(name: "Total", price: total, bold: true),
+                    ),
+
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: rows.isEmpty
+                            ? null
+                            : () async {
+                                final methodStr =
+                                    _method.name; // to store in DB
+                                final orderId = await orderRepo.placeOrder(
+                                  uid,
+                                  cart: cart,
+                                  products: products,
+                                  name: nameController.text.trim(),
+                                  address: addressController.text.trim(),
+                                  phone: phoneController.text.trim(),
+                                  paymentMethod: methodStr,
+                                );
+                                if (!mounted) return;
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => ThankYou(orderId: orderId),
+                                  ),
+                                );
+                              },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: Checkbox(
-                          value: isChecked,
-                          onChanged: (value) {
-                            setState(() {
-                              isChecked = value!;
-                            });
-                          },
-                          shape: const CircleBorder(),
-                          activeColor: Colors.green,
-                          checkColor: Colors.white,
-                          side: BorderSide.none,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
+                        child: const Text(
+                          "Place Order",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      const Text(
-                        "Home",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.edit, size: 30),
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return EditAddressBottomSheet(
-                                nameController: nameController,
-                                addressController: addressController,
-                                phoneController: phoneController,
-                                onSave: () {
-                                  setState(() {});
-                                  Navigator.pop(context);
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    nameController.text,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    addressController.text,
-                    style: const TextStyle(fontSize: 14, color: Colors.black),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    phoneController.text,
-                    style: const TextStyle(fontSize: 14, color: Colors.black),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            PaymentMethodSelector(
-              initialMethod: PaymentMethod.creditCard,
-              onChanged: (method) {},
-            ),
-            const SizedBox(height: 80),
-          ],
-        ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              );
+            },
+          );
+        },
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 6,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Order Summary",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text("1x Product Name", style: TextStyle(color: Colors.grey)),
-                Text("₵ 20.00", style: TextStyle(fontWeight: FontWeight.w600)),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text(
-                  "2x Another Product",
-                  style: TextStyle(color: Colors.grey),
-                ),
-                Text("₵ 30.00", style: TextStyle(fontWeight: FontWeight.w600)),
-              ],
-            ),
-            const Divider(height: 20, thickness: 1),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text(
-                  "Total",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "Ghc 50.00",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ThankYou()),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      backgroundColor: Colors.black,
-                      content: Center(child: Text("Order Confirmed!")),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: const Text(
-                  "Place Order",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
+    );
+  }
+}
+
+class _ShippingCard extends StatelessWidget {
+  final bool isChecked;
+  final ValueChanged<bool> onCheckChanged;
+  final VoidCallback onEdit;
+  final String name, address, phone;
+
+  const _ShippingCard({
+    required this.isChecked,
+    required this.onCheckChanged,
+    required this.onEdit,
+    required this.name,
+    required this.address,
+    required this.phone,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 5)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Checkbox(
+                value: isChecked,
+                onChanged: (v) => onCheckChanged(v ?? false),
+                shape: const CircleBorder(),
+                activeColor: Colors.green,
               ),
+              const Text(
+                "Home",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.edit, size: 26),
+                onPressed: onEdit,
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          if (name.isNotEmpty)
+            Text(
+              name,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
-          ],
-        ),
+          if (address.isNotEmpty) Text(address),
+          if (phone.isNotEmpty) Text(phone),
+        ],
+      ),
+    );
+  }
+}
+
+class _OrderRow {
+  final String name;
+  final double price;
+  final bool bold;
+  _OrderRow({required this.name, required this.price, this.bold = false});
+}
+
+class _OrderRowWidget extends StatelessWidget {
+  final _OrderRow row;
+  const _OrderRowWidget(this.row);
+  @override
+  Widget build(BuildContext context) {
+    final style = TextStyle(
+      fontSize: row.bold ? 16 : 14,
+      fontWeight: row.bold ? FontWeight.w700 : FontWeight.w500,
+    );
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            row.name,
+            style: row.bold ? style : style.copyWith(color: Colors.grey[700]),
+          ),
+          Text("GHS ${row.price.toStringAsFixed(2)}", style: style),
+        ],
       ),
     );
   }

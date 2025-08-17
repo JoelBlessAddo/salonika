@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
+import 'package:salonika/core/repo/cart_repo.dart';
+import 'package:salonika/core/repo/product_repo.dart';
 import 'package:salonika/features/home/model/product.dart';
 import 'package:salonika/features/cart/view/cart.dart';
 import 'package:salonika/features/home/view/widgets/color_selector.dart';
@@ -15,8 +18,13 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+  final repo = ProductRepository();
   @override
   Widget build(BuildContext context) {
+    final ImageProvider provider = widget.product.imageUrl.startsWith('http')
+        ? NetworkImage(widget.product.imageUrl)
+        : AssetImage(widget.product.imageUrl) as ImageProvider;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -26,9 +34,20 @@ class _ProductDetailsState extends State<ProductDetails> {
         ),
         centerTitle: true,
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: IconButton(icon: Icon(IconlyBroken.heart), onPressed: () {}),
+          StreamBuilder<bool>(
+            stream: repo.favoriteStream(uid, widget.product.id),
+            builder: (_, s) {
+              final fav = s.data == true;
+              return IconButton(
+                padding: EdgeInsets.zero,
+                onPressed: () => repo.toggleFavorite(uid, widget.product.id),
+                icon: Icon(
+                  fav ? Icons.favorite : Icons.favorite_border,
+                  color: fav ? Colors.red : Colors.grey,
+                  size: 20,
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -36,20 +55,13 @@ class _ProductDetailsState extends State<ProductDetails> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                margin: const EdgeInsets.only(top: 8.0),
-                height: 250,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.blueGrey,
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: AssetImage(widget.product.imageUrl),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+            Container(
+              height: 250,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(79, 96, 125, 139),
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(image: provider, fit: BoxFit.cover),
               ),
             ),
             Padding(
@@ -181,27 +193,43 @@ class _ProductDetailsState extends State<ProductDetails> {
                       color: Colors.green,
                       size: 28,
                     ),
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Center(child: Text('Item added to cart')),
-                          duration: Duration(seconds: 2),
-                          backgroundColor: Colors.green,
-                        ),
+                    onPressed: () async {
+                      final uid = FirebaseAuth.instance.currentUser!.uid;
+                      await CartRepository().add(
+                        uid,
+                        widget.product.id,
+                        delta: 1,
                       );
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Center(child: Text('Item added to cart')),
+                            duration: Duration(seconds: 2),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
                     },
                   ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CartDetails(),
-                        ),
+                    onTap: () async {
+                      final uid = FirebaseAuth.instance.currentUser!.uid;
+                      await CartRepository().add(
+                        uid,
+                        widget.product.id,
+                        delta: 1,
                       );
+                      if (context.mounted) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CartDetails(),
+                          ),
+                        );
+                      }
                     },
                     child: Container(
                       height: 50,
