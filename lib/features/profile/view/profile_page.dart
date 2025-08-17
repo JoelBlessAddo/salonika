@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 import 'package:provider/provider.dart';
 import 'package:salonika/features/auth/login/view/login.dart';
-
 import 'package:salonika/features/profile/view/widgets/about.dart';
 import 'package:salonika/features/profile/view/widgets/fav.dart';
 import 'package:salonika/features/profile/view/widgets/promo.dart';
@@ -20,21 +19,42 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final _db = FirebaseDatabase.instance.ref();
+  DatabaseReference? _userRef;
 
   String _sanitize(String email) =>
       email.replaceAll('.', '_').replaceAll('@', '_');
 
-  Stream<Map<String, dynamic>?> _watchUser() {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null || user.email == null) {
-      return const Stream.empty();
+  @override
+  void initState() {
+    super.initState();
+    _resolveUserRef();
+  }
+
+  Future<void> _resolveUserRef() async {
+    final authUser = FirebaseAuth.instance.currentUser;
+    if (authUser == null) return;
+
+    // Try users/<uid>
+    final uidRef = _db.child('users/${authUser.uid}');
+    final uidSnap = await uidRef.get();
+    if (uidSnap.exists) {
+      setState(() => _userRef = uidRef);
+      return;
     }
-    final key = _sanitize(user.email!);
-    return _db.child('users/$key').onValue.map((e) {
-      final v = e.snapshot.value;
-      if (v == null) return null;
-      return Map<String, dynamic>.from(v as Map);
-    });
+
+    // Fallback users/<sanitizedEmail> (legacy)
+    final email = authUser.email;
+    if (email != null) {
+      final legacyRef = _db.child('users/${_sanitize(email)}');
+      final legSnap = await legacyRef.get();
+      if (legSnap.exists) {
+        setState(() => _userRef = legacyRef);
+        return;
+      }
+    }
+
+    // Nothing found — still show auth fallback
+    setState(() => _userRef = null);
   }
 
   @override
@@ -43,141 +63,190 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: true,
-        actions: [],
-      ),
-      body: StreamBuilder<Map<String, dynamic>?>(
-        stream: _watchUser(),
-        builder: (context, snap) {
-          final data = snap.data ?? {};
-          final fullName =
-              (data['fullName'] ?? authUser?.displayName ?? 'Email').toString();
-          final email = authUser?.email ?? (data['email'] ?? '').toString();
-          final phone = (data['phone'] ?? '').toString();
+      appBar: AppBar(title: const Text('Profile'), centerTitle: true),
+      body: _userRef == null
+          ? _AuthFallback(authUser: authUser)
+          : StreamBuilder<DatabaseEvent>(
+              stream: _userRef!.onValue,
+              builder: (context, snap) {
+                if (snap.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          return Column(
-            children: [
-              const SizedBox(height: 15),
-              Padding(
-                padding: const EdgeInsets.only(left: 12.0, right: 12),
-                child: Row(
+                Map<String, dynamic> data = {};
+                final raw = snap.data?.snapshot.value;
+                if (raw is Map) {
+                  data = Map<String, dynamic>.from(raw as Map);
+                }
+
+                final fullName =
+                    (data['fullName'] ?? authUser?.displayName ?? 'Your name')
+                        .toString();
+                final email = (data['email'] ?? authUser?.email ?? '')
+                    .toString();
+                final phone = (data['phone'] ?? '').toString();
+
+                return Column(
                   children: [
-                    const CircleAvatar(
-                      radius: 40,
-                      backgroundImage: AssetImage('assets/tractor.jpg'),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    const SizedBox(height: 15),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Row(
                         children: [
-                          Text(
-                            fullName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
+                          const CircleAvatar(
+                            radius: 40,
+                            backgroundImage: AssetImage('assets/tractor.jpg'),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  fullName,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                if (email.isNotEmpty)
+                                  Text(
+                                    email,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodySmall,
+                                  ),
+                                if (phone.isNotEmpty) ...[
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    phone,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodySmall,
+                                  ),
+                                ],
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            email,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodySmall,
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Divider(thickness: 1, color: Colors.grey.shade300),
+
+                    // Menu
+                    Expanded(
+                      child: ListView(
+                        padding: const EdgeInsets.all(12),
+                        children: [
+                          _Tile(
+                            icon: IconlyBroken.heart,
+                            title: 'Favorites',
+                            onTap: () =>
+                                customNavigator(context, const FavoritesPage()),
+                          ),
+                          _Tile(
+                            icon: Icons.local_offer_outlined,
+                            title: 'Promotions',
+                            onTap: () => customNavigator(
+                              context,
+                              const PromotionsPage(),
+                            ),
+                          ),
+                          _Tile(
+                            icon: IconlyBroken.info_circle,
+                            title: 'About',
+                            onTap: () =>
+                                customNavigator(context, const AboutPage()),
+                          ),
+                          _Tile(
+                            icon: IconlyBroken.logout,
+                            title: 'Logout',
+                            onTap: () async {
+                              final vm = Provider.of<AuthViewModel>(
+                                context,
+                                listen: false,
+                              );
+                              final confirm =
+                                  await showDialog<bool>(
+                                    context: context,
+                                    builder: (ctx) => AlertDialog(
+                                      title: const Text('Logout'),
+                                      content: const Text(
+                                        'Are you sure you want to logout?',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(ctx, false),
+                                          child: const Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(ctx, true),
+                                          child: const Text('Logout'),
+                                        ),
+                                      ],
+                                    ),
+                                  ) ??
+                                  false;
+                              if (!confirm) return;
+                              await vm.logout();
+                              if (!mounted) return;
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (_) => const Login(),
+                                ),
+                                (_) => false,
+                              );
+                            },
                           ),
                         ],
                       ),
                     ),
                   ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     IconButton.filledTonal(
-              //       icon: const Icon(IconlyBroken.call, color: Colors.green),
-              //       onPressed: () {}, // optional: add url_launcher to dial
-              //     ),
-              //     Text(phone.isEmpty ? 'No phone' : phone),
-              //   ],
-              // ),
-              const SizedBox(height: 12),
-              Divider(thickness: 1, color: Colors.grey.shade300),
+                );
+              },
+            ),
+    );
+  }
+}
 
-              // Menu
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.all(12),
-                  children: [
-                    _Tile(
-                      icon: IconlyBroken.heart,
-                      title: 'Favorites',
-                      onTap: () =>
-                          customNavigator(context, const FavoritesPage()),
-                    ),
-                    _Tile(
-                      icon: Icons.local_offer_outlined,
-                      title: 'Promotions',
-                      onTap: () =>
-                          customNavigator(context, const PromotionsPage()),
-                    ),
-                    _Tile(
-                      icon: IconlyBroken.info_circle,
-                      title: 'About',
-                      onTap: () => customNavigator(context, const AboutPage()),
-                    ),
-                    _Tile(
-                      icon: IconlyBroken.logout,
-                      title: 'Logout',
-                      onTap: () async {
-                        final vm = Provider.of<AuthViewModel>(
-                          context,
-                          listen: false,
-                        );
-                        final confirm =
-                            await showDialog<bool>(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                title: const Text('Logout'),
-                                content: const Text(
-                                  'Are you sure you want to logout?',
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, false),
-                                    child: const Text('Cancel'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, true),
-                                    child: const Text('Logout'),
-                                  ),
-                                ],
-                              ),
-                            ) ??
-                            false;
-                        if (!confirm) return;
-                        await vm.logout();
-                        if (!mounted) return;
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (_) => const Login()),
-                          (route) => false,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+class _AuthFallback extends StatelessWidget {
+  final User? authUser;
+  const _AuthFallback({required this.authUser});
+  @override
+  Widget build(BuildContext context) {
+    final fullName = authUser?.displayName ?? 'Your name';
+    final email = authUser?.email ?? '';
+    return Column(
+      children: [
+        const SizedBox(height: 24),
+        ListTile(
+          leading: const CircleAvatar(
+            radius: 28,
+            backgroundImage: AssetImage('assets/tractor.jpg'),
+          ),
+          title: Text(
+            fullName,
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
+          subtitle: email.isNotEmpty ? Text(email) : null,
+        ),
+        const Padding(
+          padding: EdgeInsets.all(16),
+          child: Text(
+            "We couldn't find a profile record in the database.\n"
+            "You can continue using your auth info.",
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
     );
   }
 }

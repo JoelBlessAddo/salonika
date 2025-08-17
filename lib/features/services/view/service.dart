@@ -141,56 +141,77 @@ class _ServiceRequestPageState extends State<ServiceRequestPage> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    TextFormField(
-                      controller: fullnameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Full Name',
-                        border: OutlineInputBorder(),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      validator: (v) =>
-                          (v == null || v.isEmpty) ? 'Enter full name' : null,
+                      child: TextFormField(
+                        controller: fullnameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Full Name',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (v) =>
+                            (v == null || v.isEmpty) ? 'Enter full name' : null,
+                      ),
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
-                      controller: locationController,
-                      decoration: const InputDecoration(
-                        labelText: 'Location',
-                        border: OutlineInputBorder(),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      validator: (v) =>
-                          (v == null || v.isEmpty) ? 'Enter location' : null,
+                      child: TextFormField(
+                        controller: locationController,
+                        decoration: const InputDecoration(
+                          labelText: 'Location',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (v) =>
+                            (v == null || v.isEmpty) ? 'Enter location' : null,
+                      ),
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
-                      controller: phoneController,
-                      decoration: const InputDecoration(
-                        labelText: 'Phone Number',
-                        border: OutlineInputBorder(),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      keyboardType: TextInputType.phone,
-                      validator: (v) {
-                        if (v == null || v.isEmpty) return 'Enter phone number';
-                        if (!RegExp(r'^\+?\d{7,15}$').hasMatch(v))
-                          return 'Enter valid phone number';
-                        return null;
-                      },
+                      child: TextFormField(
+                        controller: phoneController,
+                        decoration: const InputDecoration(
+                          labelText: 'Phone Number',
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: TextInputType.phone,
+                        validator: (v) {
+                          if (v == null || v.isEmpty)
+                            return 'Enter phone number';
+                          if (!RegExp(r'^\+?\d{7,15}$').hasMatch(v))
+                            return 'Enter valid phone number';
+                          return null;
+                        },
+                      ),
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
-                      controller: emailController,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        border: OutlineInputBorder(),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (v) {
-                        if (v == null || v.isEmpty) return 'Enter email';
-                        if (!RegExp(
-                          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                        ).hasMatch(v))
-                          return 'Enter valid email';
-                        return null;
-                      },
+                      child: TextFormField(
+                        controller: emailController,
+                        decoration: const InputDecoration(
+                          labelText: 'Email',
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (v) {
+                          if (v == null || v.isEmpty) return 'Enter email';
+                          if (!RegExp(
+                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                          ).hasMatch(v))
+                            return 'Enter valid email';
+                          return null;
+                        },
+                      ),
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
@@ -209,41 +230,42 @@ class _ServiceRequestPageState extends State<ServiceRequestPage> {
                           v == null ? 'Please select a service' : null,
                     ),
                     const SizedBox(height: 24),
-                    GestureDetector(
-                      onTap: pickImage,
-                      child: Container(
-                        height: 150,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey),
-                        ),
-                        child: selectedImage != null
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.file(
-                                  selectedImage!,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(
-                                    Icons.upload_file,
-                                    size: 50,
-                                    color: Colors.grey,
-                                  ),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    'Tap to upload an image (optional)',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                      ),
-                    ),
+
+                    // GestureDetector(
+                    //   onTap: pickImage,
+                    //   child: Container(
+                    //     height: 150,
+                    //     width: double.infinity,
+                    //     decoration: BoxDecoration(
+                    //       color: Colors.grey[200],
+                    //       borderRadius: BorderRadius.circular(12),
+                    //       border: Border.all(color: Colors.grey),
+                    //     ),
+                    //     child: selectedImage != null
+                    //         ? ClipRRect(
+                    //             borderRadius: BorderRadius.circular(12),
+                    //             child: Image.file(
+                    //               selectedImage!,
+                    //               fit: BoxFit.cover,
+                    //             ),
+                    //           )
+                    //         : Column(
+                    //             mainAxisAlignment: MainAxisAlignment.center,
+                    //             children: const [
+                    //               Icon(
+                    //                 Icons.upload_file,
+                    //                 size: 50,
+                    //                 color: Colors.grey,
+                    //               ),
+                    //               SizedBox(height: 8),
+                    //               Text(
+                    //                 'Tap to upload an image (optional)',
+                    //                 style: TextStyle(color: Colors.grey),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 30),
                     SizedBox(
                       width: double.infinity,

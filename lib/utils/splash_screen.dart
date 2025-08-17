@@ -1,8 +1,9 @@
+// lib/utils/splash_screen.dart
 // ignore_for_file: deprecated_member_use
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:salonika/features/auth/login/view/login.dart';
+import 'package:salonika/utils/bottom_nav.dart';
 import 'package:salonika/utils/colors.dart';
 
 class SplashScreeen extends StatefulWidget {
@@ -18,65 +19,76 @@ class _SplashScreeenState extends State<SplashScreeen> {
   @override
   void initState() {
     super.initState();
-    // Make sure navigation happens after the first frame
     WidgetsBinding.instance.addPostFrameCallback((_) => _goNext());
   }
 
-  Future<void> _goNext() async {
-    // Optional splash delay
-    await Future.delayed(const Duration(seconds: 2));
+  Future<void> _goNext({bool skipDelay = false}) async {
+    if (!skipDelay) {
+      // tiny delay so splash is visible
+      await Future.delayed(const Duration(milliseconds: 12200));
+    }
 
     if (!mounted || _navigated) return;
     _navigated = true;
 
-    Navigator.of(
-      context,
-    ).pushReplacement(MaterialPageRoute(builder: (_) => const Login()));
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // already signed in -> Home (tab 0)
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const BottomNav(pageIndex: 0)),
+        (route) => false,
+      );
+    } else {
+      // not signed in -> Login
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => const Login()));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   const SystemUiOverlayStyle(
-    //     statusBarColor: Colors.transparent,
-    //     statusBarIconBrightness: Brightness.light,
-    //   ),
-    // );
-
     final screenHeight = MediaQuery.of(context).size.height;
-    // final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: Stack(
         children: [
           SizedBox.expand(
-            child: Image.asset('assets/tractor.jpg', fit: BoxFit.cover),
+            child: Image.asset('assets/app.jpeg', fit: BoxFit.cover),
           ),
           Positioned(
-            top: screenHeight * 0.1,
+            top: screenHeight * 0.05,
             left: 0,
             right: 0,
-            child: Center(
-              child: Text(
-                textAlign: TextAlign.center,
-                "Salonika\nWhere Technology Meets the Land",
-                style: TextStyle(fontSize: 20, color: BLACK),
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              width: double.infinity,
+              height: 70,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.black.withOpacity(0.7),
+              ),
+              child: Center(
+                child: Text(
+                  "WAATCO\nWhere Technology Meets the Land",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: WHITE,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
               ),
             ),
           ),
-
           Positioned(
             bottom: screenHeight * 0.05,
             left: 0,
             right: 0,
             child: Center(
               child: TextButton(
-                onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => const Login()),
-                  // );
-                },
+                onPressed: () => _goNext(skipDelay: true),
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 30,

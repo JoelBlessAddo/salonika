@@ -1,0 +1,6 @@
+{
+  "promotions": {
+    "promo_1": { "title": "Free Consultation", "desc": "Talk to our experts", "badge": "NEW" },
+    "promo_2": { "title": "Spare Parts 10% Off", "desc": "Original SONALIKA parts", "badge": "SALE" }
+  }
+}

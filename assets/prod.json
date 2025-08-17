@@ -1,0 +1,263 @@
+{
+  "prod_0001": {
+    "createdAt": 0,
+    "description": "A compact and efficient tractor designed for small farms and gardens.",
+    "id": "prod_0001",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F1.png?alt=media&token=ffa6e386-75ad-4ff8-bbdb-a12f13467198",
+    "name": "Nano Tractor",
+ "price": 12249.99,
+    "quantity": 4,
+    "specs": {
+      "power": "75 HP",
+      "pto": "Independent",
+      "rearTyreRange": "429.26mm - 762mm (16.9 - 30)",
+      "steering": "Power Steering",
+      "transmission": "12F+12R"
+    },
+    "updatedAt": 0
+  },
+  "prod_0002": {
+    "createdAt": 0,
+    "description": "A compact and efficient tractor designed for small farms and gardens.",
+    "id": "prod_0002",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/<your-bucket>/o/product_images%2Fprod_0002.jpg?alt=mediahttps://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F2.png?alt=media&token=6d0c9cf4-9cde-4859-a3d2-a0ff942b149d",
+    "name": "Tractor Mini",
+  "price": 32229.99,
+    "quantity": 4,
+    "specs": {
+      "power": "75 HP",
+      "pto": "Independent",
+      "rearTyreRange": "429.26mm - 762mm (16.9 - 30)",
+      "steering": "Power Steering",
+      "transmission": "12F+12R"
+    },
+    "updatedAt": 0
+  },
+  "prod_0003": {
+    "createdAt": 0,
+    "description": "A compact and efficient tractor designed for small farms and gardens.",
+    "id": "prod_0003",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F3.png?alt=media&token=70eca7e5-0305-4393-98c2-82f3a4688c1c",
+    "name": "Tractor Copa",
+"price": 19829.99,
+    "quantity": 4,
+    "specs": {
+      "power": "75 HP",
+      "pto": "Independent",
+      "rearTyreRange": "429.26mm - 762mm (16.9 - 30)",
+      "steering": "Power Steering",
+      "transmission": "12F+12R"
+    },
+    "updatedAt": 0
+  },
+  "prod_0004": {
+    "createdAt": 0,
+    "description": "A compact and efficient tractor designed for small farms and gardens.",
+    "id": "prod_0004",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F4.png?alt=media&token=946adf6d-bd61-4324-b6e3-c2310950296f",
+    "name": "Tractor",
+ "price": 33989.99,
+    "quantity": 4,
+    "specs": {
+      "power": "75 HP",
+      "pto": "Double with IPTO",
+      "rearTyreRange": "429.26mm - 762mm (16.9 - 30)",
+      "steering": "Power Steering",
+      "transmission": "12F+12R"
+    },
+    "updatedAt": 0
+  },
+  "prod_0005": {
+    "createdAt": 0,
+    "description": "A compact and efficient tractor designed for small farms and gardens.",
+    "id": "prod_0005",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/<your-bucket>/o/product_images%2Fprod_0005.jpg?alt=media",
+    "name": "Tractor Plus",
+ "price": 50029.99,
+    "quantity": 4,
+    "specs": {
+      "power": "75 HP",
+      "pto": "Double with IPTO",
+      "rearTyreRange": "429.26mm - 762mm (16.9 - 30)",
+      "steering": "Power Steering",
+      "transmission": "12F+12R"
+    },
+    "updatedAt": 0
+  },
+  "prod_0006": {
+    "createdAt": 0,
+    "description": "75 HP tractor with independent PTO and power steering.",
+    "id": "prod_0006",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F6.png?alt=media&token=76af7208-6072-41f0-a2ef-bbb1b8ad645a",
+    "name": "Sonalika Tiger DI 75 CRDS",
+ "price": 20000,
+    "quantity": 4,
+    "specs": {
+      "power": "75 HP",
+      "pto": "Independent",
+      "rearTyreRange": "429.26mm - 762mm (16.9 - 30)",
+      "steering": "Power Steering",
+      "transmission": "12F+12R"
+    },
+    "updatedAt": 0
+  },
+  "prod_0007": {
+    "createdAt": 0,
+    "description": "75 HP 4WD with double clutch IPTO and power steering.",
+    "id": "prod_0007",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F7.png?alt=media&token=492b08a9-bec0-458e-a003-c3f3d5167188",
+    "name": "Sonalika Tiger DI 75 4WD CRDS",
+ "price": 30900,
+    "quantity": 4,
+    "specs": {
+      "power": "75 HP",
+      "pto": "Double with IPTO",
+      "rearTyreRange": "429.26mm - 762mm (16.9 - 30)",
+      "steering": "Power Steering",
+      "transmission": "12F+12R"
+    },
+    "updatedAt": 0
+  },
+  "prod_0008": {
+    "createdAt": 0,
+    "description": "65 HP with independent PTO and power steering.",
+    "id": "prod_0008",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F8.png?alt=media&token=36e7d55b-5232-40ec-b2a8-7198cde24c0d",
+    "name": "Sonalika Tiger DI 65 CRDS",
+ "price": 10110,
+    "quantity": 4,
+    "specs": {
+      "power": "65 HP",
+      "pto": "Independent",
+      "rearTyreRange": "429.26mm - 711.2mm / 429.26mm - 762mm (16.9-28 / 16.9-30)",
+      "steering": "Power Steering",
+      "transmission": "12F+12R"
+    },
+    "updatedAt": 0
+  },
+  "prod_0009": {
+    "createdAt": 0,
+    "description": "65 HP 4WD with double clutch IPTO and power steering.",
+    "id": "prod_0009",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F9.png?alt=media&token=5c7f0b47-379c-4cf5-8e06-3efdce38ffd6",
+    "name": "Sonalika Tiger DI 65 4WD CRDS",
+"price": 23220,
+    "quantity": 4,
+    "specs": {
+      "power": "65 HP",
+      "pto": "Double with IPTO",
+      "rearTyreRange": "429.26mm - 711.2mm (16.9 - 28) / 429.26mm - 762mm (16.9 - 30)",
+      "steering": "Power Steering",
+      "transmission": "12F+12R"
+    },
+    "updatedAt": 0
+  },
+  "prod_0010": {
+    "createdAt": 0,
+    "description": "60 HP with double clutch IPTO, creeper option and power steering.",
+    "id": "prod_0010",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F10.png?alt=media&token=0cf7dd1a-97d3-43a9-897d-b6e775197b28",
+    "name": "Sonalika Tiger DI 60 CRDS",
+"price": 22330,
+    "quantity": 4,
+    "specs": {
+      "power": "60 HP",
+      "pto": "Double with IPTO",
+      "rearTyreRange": "429.26mm - 711.2mm (16.9 - 28)",
+      "steering": "Power Steering",
+      "transmission": "12F+12R / 20F+20R with Creeper"
+    },
+    "updatedAt": 0
+  },
+  "prod_0011": {
+    "createdAt": 0,
+    "description": "60 HP 4WD with double clutch IPTO and power steering.",
+    "id": "prod_0011",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F11.png?alt=media&token=cdf510b6-d43e-42b6-b7ae-bde3acda8862",
+    "name": "Sonalika Tiger DI 60 4WD CRDS",
+"price": 23330,
+    "quantity": 4,
+    "specs": {
+      "power": "60 HP",
+      "pto": "Double with IPTO",
+      "rearTyreRange": "429.26mm - 711.2mm (16.9 - 28)",
+      "steering": "Power Steering",
+      "transmission": "12F+12R"
+    },
+    "updatedAt": 0
+  },
+  "prod_0012": {
+    "createdAt": 0,
+    "description": "Max torque 255 Nm with independent PTO and power steering.",
+    "id": "prod_0012",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F12.png?alt=media&token=30820982-bc2f-433b-923e-e96f7a9f9ee0",
+    "name": "Sonalika Tiger DI 55",
+ "price": 78880,
+    "quantity": 4,
+    "specs": {
+      "maxTorque": "255 Nm",
+      "pto": "Independent",
+      "rearTyreRange": "429.26mm - 711.2mm (16.9 - 28)",
+      "steering": "Power Steering",
+      "transmission": "12F+12R"
+    },
+    "updatedAt": 0
+  },
+  "prod_0013": {
+    "createdAt": 0,
+    "description": "Max torque 235 Nm, multiple transmission and PTO options.",
+    "id": "prod_0013",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F13.png?alt=media&token=6c7b887e-632f-411b-96c1-7e114238cf93",
+    "name": "Sonalika DI 750 III",
+"price": 33220,
+    "quantity": 4,
+    "specs": {
+      "maxTorque": "235 Nm",
+      "pto": "Single / Dual / Independent",
+      "rearTyreRange": "378.4mm - 711.2mm (14.9 - 28) / 429.2mm - 711.2mm (16.9 - 28)",
+      "steering": "Mechanical / Power",
+      "transmission": "8F+2R / 12F+3R / 12F+12R"
+    },
+    "updatedAt": 0
+  },
+  "prod_0014": {
+    "createdAt": 0,
+    "description": "Hydraulic-assisted plowing tractor for efficient deep tilling.",
+    "id": "prod_0014",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F14.png?alt=media&token=abf5478f-d504-48a4-b710-b81202f96454",
+    "name": "HydroPlow Ultra",
+ "price": 70009.99,
+    "quantity": 4,
+    "updatedAt": 0
+  },
+  "prod_0015": {
+    "createdAt": 0,
+    "description": "Balanced lifting performance with strong rear linkage capacity.",
+    "id": "prod_0015",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F15.png?alt=media&token=2f4407ff-9f68-45c4-be37-480949bde160",
+    "name": "TerraLift 250",
+  "price": 70004.99,
+    "quantity": 4,
+    "updatedAt": 0
+  },
+  "prod_0016": {
+    "createdAt": 0,
+    "description": "Efficient power-tiller configuration for seedbed preparation.",
+    "id": "prod_0016",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F16.png?alt=media&token=87d200a1-bc9e-40dd-b6ec-d19a3dadd7b4",
+    "name": "PowerTill X",
+  "price": 68989.5,
+    "quantity": 4,
+    "updatedAt": 0
+  },
+  "prod_0017": {
+    "createdAt": 0,
+    "description": "Agile utility tractor ideal for quick tasks and narrow rows.",
+    "id": "prod_0017",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/salonika-trator.firebasestorage.app/o/product_images%2F17.png?alt=media&token=8e71cf55-789c-46e0-b3af-c5f832b1751f",
+    "name": "AgroJet 90",
+"price": 50004.99,
+    "quantity": 4,
+    "updatedAt": 0
+  }
+}

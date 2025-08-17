@@ -1,51 +1,59 @@
-// Put this small widget in the same file (below the class) or a widgets/ folder
+// lib/features/home/view/widgets/net_image.dart
 import 'package:flutter/material.dart';
 
-class _ProductImage extends StatelessWidget {
-  final String url;
-  const _ProductImage({required this.url});
+class NetImage extends StatelessWidget {
+  final String urlOrAsset;
+  final double height;
+  final double? width;
+  final BoxFit fit;
+
+  const NetImage(
+    this.urlOrAsset, {
+    super.key,
+    this.height = 120,
+    this.width,
+    this.fit = BoxFit.cover,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isNetwork = url.startsWith('http');
-    final image = isNetwork
+    final isNetwork = urlOrAsset.startsWith('http');
+    final img = isNetwork
         ? Image.network(
-            url,
-            height: 250,
-            width: double.infinity,
-            fit: BoxFit.cover,
-            // helpful during dev:
+            urlOrAsset,
+            height: height,
+            width: width,
+            fit: fit,
             errorBuilder: (_, __, ___) => _error(),
             loadingBuilder: (c, child, progress) {
               if (progress == null) return child;
               return SizedBox(
-                height: 250,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    value: progress.expectedTotalBytes != null
-                        ? progress.cumulativeBytesLoaded /
-                            (progress.expectedTotalBytes ?? 1)
-                        : null,
-                  ),
-                ),
+                height: height,
+                width: width,
+                child: Center(child: CircularProgressIndicator(value: _val(progress))),
               );
             },
           )
         : Image.asset(
-            url,
-            height: 250,
-            width: double.infinity,
-            fit: BoxFit.cover,
+            urlOrAsset,
+            height: height,
+            width: width,
+            fit: fit,
             errorBuilder: (_, __, ___) => _error(),
           );
+    return img;
+  }
 
-    return SizedBox(height: 250, width: double.infinity, child: image);
+  double? _val(ImageChunkEvent e) {
+    if (e.expectedTotalBytes == null) return null;
+    return e.cumulativeBytesLoaded / (e.expectedTotalBytes ?? 1);
   }
 
   Widget _error() => Container(
-        height: 250,
-        color: Colors.blueGrey,
+        height: height,
+        width: width,
+        color: const Color(0xFFEAEAEA),
         alignment: Alignment.center,
-        child: const Icon(Icons.broken_image_outlined, size: 48, color: Colors.white70),
+        child: const Icon(Icons.broken_image_outlined, color: Colors.grey),
       );
 }

@@ -1,3 +1,5 @@
+// lib/features/home/view/widgets/product_details.dart
+// ignore_for_file: deprecated_member_use
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
@@ -6,11 +8,12 @@ import 'package:salonika/core/repo/product_repo.dart';
 import 'package:salonika/features/home/model/product.dart';
 import 'package:salonika/features/cart/view/cart.dart';
 import 'package:salonika/features/home/view/widgets/color_selector.dart';
+import 'package:salonika/features/home/view/widgets/product_image.dart';
 import 'package:salonika/features/home/view/widgets/specifications.dart';
+import 'package:salonika/utils/auth_guard.dart';
 
 class ProductDetails extends StatefulWidget {
   final Product product;
-
   const ProductDetails({super.key, required this.product});
 
   @override
@@ -18,13 +21,24 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-  final uid = FirebaseAuth.instance.currentUser!.uid;
   final repo = ProductRepository();
+
+  IconData _iconForSpec(String key) {
+    final k = key.toLowerCase();
+    if (k.contains('power')) return Icons.power;
+    if (k.contains('pto')) return Icons.settings_input_component;
+    if (k.contains('gear')) return Icons.settings;
+    if (k.contains('cylinder')) return Icons.blur_circular;
+    if (k.contains('brake')) return Icons.build;
+    if (k.contains('category')) return Icons.category_outlined;
+    if (k.contains('implement')) return Icons.handyman;
+    return Icons.info_outline;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final ImageProvider provider = widget.product.imageUrl.startsWith('http')
-        ? NetworkImage(widget.product.imageUrl)
-        : AssetImage(widget.product.imageUrl) as ImageProvider;
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final specs = widget.product.specs;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -35,16 +49,20 @@ class _ProductDetailsState extends State<ProductDetails> {
         centerTitle: true,
         actions: [
           StreamBuilder<bool>(
-            stream: repo.favoriteStream(uid, widget.product.id),
+            stream: uid == null
+                ? Stream<bool>.value(false)
+                : repo.favoriteStream(uid, widget.product.id),
             builder: (_, s) {
               final fav = s.data == true;
               return IconButton(
-                padding: EdgeInsets.zero,
-                onPressed: () => repo.toggleFavorite(uid, widget.product.id),
+                onPressed: () async {
+                  final okUid = uid ?? await ensureSignedIn(context);
+                  if (okUid == null) return;
+                  await repo.toggleFavorite(okUid, widget.product.id);
+                },
                 icon: Icon(
                   fav ? Icons.favorite : Icons.favorite_border,
                   color: fav ? Colors.red : Colors.grey,
-                  size: 20,
                 ),
               );
             },
@@ -55,29 +73,31 @@ class _ProductDetailsState extends State<ProductDetails> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 250,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(79, 96, 125, 139),
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(image: provider, fit: BoxFit.cover),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: NetImage(
+                widget.product.imageUrl,
+                height: 250,
+                width: double.infinity,
               ),
             ),
+            const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Text(
                 widget.product.name,
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                style: const TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
+                const Padding(
+                  padding: EdgeInsets.only(left: 8.0),
                   child: Text(
                     'Available in stock',
                     style: TextStyle(fontSize: 15, color: Colors.green),
@@ -85,26 +105,20 @@ class _ProductDetailsState extends State<ProductDetails> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 10.0),
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: widget.product.price.toString(),
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ],
+                  child: Text(
+                    "GHS ${widget.product.price.toStringAsFixed(2)}",
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const SizedBox(height: 10),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Text(
                 "Color:",
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
@@ -114,61 +128,59 @@ class _ProductDetailsState extends State<ProductDetails> {
               padding: const EdgeInsets.all(8.0),
               child: ColorSelector(
                 colors: [
-                  const Color.fromARGB(229, 244, 67, 54),
-                  const Color.fromARGB(223, 76, 175, 79),
-                  const Color.fromARGB(231, 33, 149, 243),
-                  const Color.fromARGB(224, 255, 153, 0),
+                  const Color(0xE5F44336),
+                  const Color(0xDF4CAF50),
+                  const Color(0xE72195F3),
+                  const Color(0xE0FF9900),
                 ],
                 onColorSelected: (color) {},
               ),
             ),
-            SizedBox(height: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
                     'Description',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
+                  Text(
                     widget.product.description,
-                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                    style: const TextStyle(fontSize: 16, color: Colors.black54),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0, top: 16.0),
-                  child: Text(
+                  const SizedBox(height: 16),
+
+                  const Text(
                     'Specifications',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 1.5,
-                    children: [
-                      buildSpecCard(Icons.power, 'Engine Power', '120 HP'),
-                      buildSpecCard(
-                        Icons.local_gas_station,
-                        'Fuel Type',
-                        'Diesel',
-                      ),
-                      buildSpecCard(Icons.settings, 'Transmission', '8F / 2R'),
-                      buildSpecCard(Icons.monitor_weight, 'Weight', '4,500 kg'),
-                    ],
-                  ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+
+                  if (specs.isEmpty)
+                    const Text(
+                      'No specifications provided.',
+                      style: TextStyle(color: Colors.black54),
+                    )
+                  else
+                    GridView.count(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 1.6,
+                      children: specs.entries.map((e) {
+                        return buildSpecCard(
+                          _iconForSpec(e.key),
+                          e.key,
+                          e.value,
+                        );
+                      }).toList(),
+                    ),
+                ],
+              ),
             ),
           ],
         ),
@@ -194,9 +206,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                       size: 28,
                     ),
                     onPressed: () async {
-                      final uid = FirebaseAuth.instance.currentUser!.uid;
+                      final okUid = uid ?? await ensureSignedIn(context);
+                      if (okUid == null) return;
                       await CartRepository().add(
-                        uid,
+                        okUid,
                         widget.product.id,
                         delta: 1,
                       );
@@ -216,9 +229,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                 Expanded(
                   child: GestureDetector(
                     onTap: () async {
-                      final uid = FirebaseAuth.instance.currentUser!.uid;
+                      final okUid = uid ?? await ensureSignedIn(context);
+                      if (okUid == null) return;
                       await CartRepository().add(
-                        uid,
+                        okUid,
                         widget.product.id,
                         delta: 1,
                       );
@@ -226,7 +240,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const CartDetails(),
+                            builder: (_) => const CartDetails(),
                           ),
                         );
                       }
