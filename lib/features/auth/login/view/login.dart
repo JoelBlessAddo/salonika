@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:salonika/features/auth/forgot/view/forgot_password_screen.dart';
 import 'package:salonika/features/auth/signup/view/signup.dart';
 import 'package:salonika/utils/bottom_nav.dart';
+import 'package:salonika/utils/navigator.dart';
 import '../../../../utils/colors.dart';
 import '../../auth_view_model/auth_vm.dart';
 
@@ -93,7 +95,7 @@ class _LoginState extends State<Login> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                 ),
-                child: Image.asset('assets/tractor.jpg', fit: BoxFit.cover),
+                child: Image.asset('assets/app.jpeg', fit: BoxFit.cover),
               ),
               const SizedBox(height: 10),
               const Text(
@@ -152,7 +154,7 @@ class _LoginState extends State<Login> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    // TODO: navigate to Forgot Password screen
+                    customNavigator(context, ForgotPasswordScreen());
                   },
                   child: Text(
                     'Forgot Password?',

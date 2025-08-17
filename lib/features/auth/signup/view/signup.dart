@@ -88,7 +88,7 @@ class _RegisterState extends State<Register> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                 ),
-                child: Image.asset("assets/tractor.jpg", fit: BoxFit.cover),
+                child: Image.asset("assets/app.jpeg", fit: BoxFit.cover),
               ),
               const SizedBox(height: 10),
               const Text(
@@ -200,7 +200,7 @@ class _RegisterState extends State<Register> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: _onSignUp,
+                  onPressed: _submitting ? null : _onSignUp,
                   child: Text(
                     _submitting ? 'Loading…' : 'Signup',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
