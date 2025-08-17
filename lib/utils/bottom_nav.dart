@@ -6,31 +6,31 @@ import 'package:salonika/features/profile/view/profile_page.dart';
 import 'package:salonika/features/services/view/widgets/services_page.dart';
 
 class BottomNav extends StatefulWidget {
-  const BottomNav({super.key});
+  const BottomNav({super.key, this.pageIndex = 0}); // <-- new
+  final int pageIndex; // <-- new
 
   @override
   State<BottomNav> createState() => _BottomNavState();
 }
 
 class _BottomNavState extends State<BottomNav> {
-  final pages = [
-    const HomePage(),
-    const Servicespage(),
-    const CartPage(),
-    const ProfilePage(),
-  ];
-  int currentIndex = 0;
+  late int currentIndex; // <-- late, set in initState
+
+  final pages = const [HomePage(), Servicespage(), CartPage(), ProfilePage()];
+
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.pageIndex; // <-- use the passed index
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: pages[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
-        onTap: (int index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
+        onTap: (int index) => setState(() => currentIndex = index),
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.green,
         unselectedItemColor: Colors.grey,

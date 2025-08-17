@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
+import 'package:salonika/features/cart/view/cart.dart';
+import 'package:salonika/features/cart/view/widgets/cart_badge.dart';
 import 'package:salonika/features/profile/view/profile_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -15,10 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: false,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Hi Joel'),
-          Text('Good afternoon', style: Theme.of(context).textTheme.bodySmall),
-        ],
+        children: [const Text('Hi')],
       ),
       actions: [
         Padding(
@@ -32,28 +31,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   // Handle notifications
                 },
               ),
-              Positioned(
-                right: -2,
-                top: -2,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  constraints: const BoxConstraints(
-                    minWidth: 20,
-                    minHeight: 20,
-                  ),
-                  child: const Text(
-                    "3",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: CartBadgeButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const CartDetails()),
+                    );
+                  },
                 ),
               ),
             ],
