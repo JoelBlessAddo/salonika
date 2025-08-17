@@ -1,12 +1,13 @@
+// lib/features/home/view/widgets/product_card.dart
 // ignore_for_file: deprecated_member_use
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:salonika/core/repo/cart_repo.dart';
 import 'package:salonika/core/repo/product_repo.dart';
 import 'package:salonika/features/home/model/product.dart';
 import 'package:salonika/features/home/view/widgets/product_details.dart';
-import 'package:salonika/utils/colors.dart';
+import 'package:salonika/features/home/view/widgets/product_image.dart';
+import 'package:salonika/utils/auth_guard.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -14,8 +15,8 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
     final repo = ProductRepository();
+    final uid = FirebaseAuth.instance.currentUser?.uid;
 
     return GestureDetector(
       onTap: () => Navigator.push(
@@ -32,43 +33,58 @@ class ProductCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Container(
-              height: 100,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(10),
-                ),
-                image: DecorationImage(
-                  image: NetworkImage(product.imageUrl), // <-- network
-                  fit: BoxFit.cover,
-                ),
+            // image + favorite
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(10),
               ),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white70,
-                    radius: 16,
-                    child: StreamBuilder<bool>(
-                      stream: repo.favoriteStream(uid, product.id),
-                      builder: (_, s) {
-                        final fav = s.data == true;
-                        return IconButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () => repo.toggleFavorite(uid, product.id),
-                          icon: Icon(
-                            fav ? Icons.favorite : Icons.favorite_border,
-                            color: fav ? Colors.red : Colors.grey,
-                            size: 20,
-                          ),
-                        );
-                      },
+              child: Stack(
+                children: [
+                  SizedBox(
+                    height: 100,
+                    width: double.infinity,
+                    child: Image(
+                      image: product.imageUrl.startsWith('http')
+                          ? NetworkImage(product.imageUrl)
+                          : AssetImage(product.imageUrl),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                ),
+
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white70,
+                      radius: 16,
+                      child: StreamBuilder<bool>(
+                        stream: uid == null
+                            ? Stream<bool>.value(false)
+                            : repo.favoriteStream(uid, product.id),
+                        builder: (_, s) {
+                          final fav = s.data == true;
+                          return IconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () async {
+                              final okUid =
+                                  uid ?? await ensureSignedIn(context);
+                              if (okUid == null) return;
+                              await repo.toggleFavorite(okUid, product.id);
+                            },
+                            icon: Icon(
+                              fav ? Icons.favorite : Icons.favorite_border,
+                              color: fav ? Colors.red : Colors.grey,
+                              size: 20,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+
             const Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -114,10 +130,11 @@ class ProductCard extends StatelessWidget {
                           ),
                           child: IconButton(
                             onPressed: () async {
-                              final uid =
-                                  FirebaseAuth.instance.currentUser!.uid;
+                              final okUid =
+                                  uid ?? await ensureSignedIn(context);
+                              if (okUid == null) return;
                               await CartRepository().add(
-                                uid,
+                                okUid,
                                 product.id,
                                 delta: 1,
                               );
@@ -133,7 +150,6 @@ class ProductCard extends StatelessWidget {
                                 );
                               }
                             },
-
                             icon: const Icon(
                               Icons.add_shopping_cart,
                               color: Colors.white,

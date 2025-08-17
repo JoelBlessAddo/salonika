@@ -6,6 +6,7 @@ import 'package:salonika/core/repo/product_repo.dart';
 import 'package:salonika/features/home/model/product.dart';
 import 'package:salonika/features/home/view/widgets/product_card.dart';
 import 'package:salonika/utils/custom_appbar.dart';
+import 'package:salonika/utils/local_pro.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,7 +23,9 @@ class _HomePageState extends State<HomePage> {
   Timer? _debounce;
 
   static const _shopNumber = '0545755752';
-
+  
+ final repoo = LocalProductRepository.instance;
+  String _q = '';
   @override
   void dispose() {
     _debounce?.cancel();
@@ -47,7 +50,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {   final stream = _q.isEmpty ? repoo.watchProducts() : repo.search(_q);
     return Scaffold(
       appBar: CustomAppBar(),
       backgroundColor: Colors.white,
@@ -225,58 +228,36 @@ class _HomePageState extends State<HomePage> {
 
               // Products + filter by _query
               StreamBuilder<List<Product>>(
-                stream: repo.watchProducts(),
-                builder: (context, snap) {
-                  if (!snap.hasData) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
-                  final all = snap.data!;
-                  final q = _query;
-                  final products = q.isEmpty
-                      ? all
-                      : all.where((p) {
-                          final name = (p.name).toLowerCase();
-                          final desc = (p.description).toLowerCase();
-                          return name.contains(q) || desc.contains(q);
-                        }).toList();
-
-                  if (products.isEmpty) {
-                    return Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        children: [
-                          const Text('No results found.'),
-                          const SizedBox(height: 6),
-                          Text(
-                            '“$_query”',
-                            style: const TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 250,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 16,
-                          childAspectRatio: 0.9,
-                        ),
-                    itemCount: products.length,
-                    itemBuilder: (_, i) => ProductCard(product: products[i]),
+              stream: stream,
+              builder: (context, snap) {
+                if (!snap.hasData) {
+                  return const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Center(child: CircularProgressIndicator()),
                   );
-                },
-              ),
-
+                }
+                final products = snap.data!;
+                if (products.isEmpty) {
+                  return const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Text('No products match your search'),
+                  );
+                }
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 250,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 16,
+                    childAspectRatio: 0.9,
+                  ),
+                  itemCount: products.length,
+                  itemBuilder: (_, i) => ProductCard(product: products[i]),
+                );
+              },
+            ),
+            const SizedBox(height: 20),
               const SizedBox(height: 80), // leave space for FAB
             ],
           ),
