@@ -1,4 +1,6 @@
 // lib/features/profile/view/profile_page.dart
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:salonika/features/auth/login/view/login.dart';
 import 'package:salonika/features/profile/view/widgets/about.dart';
 import 'package:salonika/features/profile/view/widgets/fav.dart';
+import 'package:salonika/features/profile/view/widgets/initials.dart';
 import 'package:salonika/features/profile/view/widgets/promo.dart';
 import 'package:salonika/utils/navigator.dart';
 import '../../auth/auth_view_model/auth_vm.dart';
@@ -93,10 +96,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Row(
                         children: [
-                          const CircleAvatar(
-                            radius: 40,
-                            backgroundImage: AssetImage('assets/tractor.jpg'),
+                          InitialsAvatar(
+                            name: fullName,
+                            email: email,
+                            radius: 28,
                           ),
+
                           const SizedBox(width: 16),
                           Expanded(
                             child: Column(

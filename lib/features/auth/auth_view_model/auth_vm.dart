@@ -1,5 +1,6 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/repo/user_repo.dart';
@@ -11,6 +12,7 @@ class AuthViewModel extends ChangeNotifier {
   final AuthService _authService;
   final UserRepository _userRepo;
   final LocalStorageService _localStorage = LocalStorageService();
+    ValueListenable<UserModel?> get localUser => _localStorage.user;
   bool isLoading = false;
   String? error;
 User? get currentUser => FirebaseAuth.instance.currentUser;

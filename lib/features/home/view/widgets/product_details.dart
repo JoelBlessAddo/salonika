@@ -10,7 +10,9 @@ import 'package:salonika/features/cart/view/cart.dart';
 import 'package:salonika/features/home/view/widgets/color_selector.dart';
 import 'package:salonika/features/home/view/widgets/product_image.dart';
 import 'package:salonika/features/home/view/widgets/specifications.dart';
+import 'package:salonika/features/profile/view/widgets/fav.dart';
 import 'package:salonika/utils/auth_guard.dart';
+import 'package:salonika/utils/navigator.dart';
 
 class ProductDetails extends StatefulWidget {
   final Product product;
@@ -42,6 +44,12 @@ class _ProductDetailsState extends State<ProductDetails> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            customNavigator(context, FavoritesPage());
+          },
+          icon: Icon(Icons.arrow_back_ios),
+        ),
         title: const Text(
           'Details',
           style: TextStyle(fontWeight: FontWeight.w400),

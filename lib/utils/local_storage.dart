@@ -8,6 +8,17 @@ import '../features/auth/model/user_model.dart';
 class LocalStorageService {
   static const String userKey = 'loggedInUser';
 
+  /// Live local user (null when logged out)
+  final ValueNotifier<UserModel?> user = ValueNotifier<UserModel?>(null);
+
+  Future<void> init() async {
+    final sp = await SharedPreferences.getInstance();
+    final raw = sp.getString('user');
+    if (raw != null) {
+      user.value = UserModel.fromJson(jsonDecode(raw));
+    }
+  }
+
   Future<void> saveUser(UserModel user) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(userKey, jsonEncode(user.toJson()));
@@ -36,6 +47,4 @@ class LocalStorageService {
     final data = jsonDecode(jsonString);
     return data['fullName'] as String?;
   }
-
-
 }

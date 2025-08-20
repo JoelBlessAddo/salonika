@@ -69,11 +69,12 @@
     "updatedAt": 0
   },
 
+  
   "prod_0005": {
     "createdAt": 0,
     "description": "A compact and efficient tractor designed for small farms and gardens.",
     "id": "prod_0005",
-    "imageUrl": "assets/images/4.png",
+    "imageUrl": "assets/images/imp1.jpeg",
     "name": "Sonalika 9 Tyne Cultivator",
  "price": 50029.99,
     "quantity": 4,
@@ -88,7 +89,7 @@
     "createdAt": 0,
     "description": "75 HP tractor with independent PTO and power steering.",
     "id": "prod_0006",
-    "imageUrl": "assets/images/5.png",
+    "imageUrl": "assets/images/imp2.jpeg",
     "name": "Sonalika Jumbo Hydraulic Reversible Plough Slrp-2 Mb",
  "price": 41029.99,
     "quantity": 7,
@@ -103,7 +104,7 @@
     "createdAt": 0,
     "description": "75 HP 4WD with double clutch IPTO and power steering.",
     "id": "prod_0007",
-    "imageUrl": "assets/images/7.png",
+    "imageUrl": "assets/images/imp3.jpeg",
    "name": "Sonalika Super Seeder Slss - 14 ",
  "price": 20029.99,
     "quantity": 6,
@@ -118,7 +119,7 @@
     "createdAt": 0,
     "description": "65 HP with independent PTO and power steering.",
     "id": "prod_0008",
-    "imageUrl": "assets/images/7.png",
+    "imageUrl": "assets/images/imp4.jpeg",
     "name": "Sonalika Disc Harrow Offset Mounted",
  "price": 53029.99,
     "quantity": 10,
@@ -129,4 +130,6 @@
     },
     "updatedAt": 0
   }
+
+
 }
